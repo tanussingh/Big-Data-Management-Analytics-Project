@@ -1,0 +1,47 @@
+# This is a HJSON-File, so comments and so on can be used! See https://hjson.org/
+# Furthermore this is first of all the actual config file, but as default just filled with examples.
+{
+  # Every URL has to be in an array-object in "base_urls".
+  # The same URL in combination with the same crawler may only appear once in this array.
+  "base_urls" : [
+    {
+      # Start crawling from faz.net
+      "url": "https://cnnespanol.cnn.com",
+
+      # Because this site is weirt, use the
+      # meta_contains_article_keyword-heuristic and disable all others because
+      # overwrite will merge the defaults from "newscrawler.cfg" with
+      # this
+#       "overwrite_heuristics": {
+#        "meta_contains_article_keyword": true,
+#        "og_type": false,
+#        "linked_headlines": false,
+#        "self_linked_headlines": false
+#       },
+      # Also state that in the condition, all heuristics used in the condition
+      # have to be activated in "overwrite_heuristics" (or default) as well.
+#      "pass_heuristics_condition": "meta_contains_article_keyword"
+    },
+    {
+      # nytimes.com should run pretty well with default config:
+      "url": "https://www.elmundo.es"
+
+      # to create an additional RssCrawler daemon for this site that runs every hour, we could either use
+      # "additional_rss_daemon": 3600
+      # or create an additional array-object with "crawler": "RssCrawler" and "daemonize": 3600
+      # it is not possible to create an additional_rss_daemon for a daemonized array-object
+    },
+    {
+        "url": "https://www.elconfidencial.com"
+    },
+    {
+        "url": "https://www.antena3.com"
+    },
+    {
+        "url": "https://www.20minutos.es"
+    },
+    {
+        "url": "http://www.rtve.es"
+    }
+  ]
+}

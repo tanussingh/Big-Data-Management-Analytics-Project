@@ -158,3 +158,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# Crawler data
+Crawler/config/data/*
+Crawler/config/.resume_jobdir/*
