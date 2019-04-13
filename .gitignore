@@ -161,3 +161,6 @@ venv.bak/
 # Crawler data
 Crawler/config/data/*
 Crawler/config/.resume_jobdir/*
+
+# UDPipe models
+*.udpipe
