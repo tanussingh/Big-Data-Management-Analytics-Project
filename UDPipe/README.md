@@ -18,3 +18,6 @@ Here is an example usage:
 ```
 python run_udpipe.py tokenize conllu spanish-ancora-ud-2.3-181115.udpipe
 ```
+
+Type (or paste) some text into the terminal after the message `Loading model: done`. (You can input multiple lines.)
+Then press <kbd>⌘</kbd> + <kbd>D</kbd> to finish reading. The program will then output the UD parse.
