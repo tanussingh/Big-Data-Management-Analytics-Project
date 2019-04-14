@@ -24,7 +24,9 @@
     },
     {
       # nytimes.com should run pretty well with default config:
-      "url": "https://www.elmundo.es"
+      "url": "https://www.elmundo.es",
+      "crawler": "RecursiveCrawler"
+
 
       # to create an additional RssCrawler daemon for this site that runs every hour, we could either use
       # "additional_rss_daemon": 3600
@@ -32,7 +34,8 @@
       # it is not possible to create an additional_rss_daemon for a daemonized array-object
     },
     {
-        "url": "https://www.elconfidencial.com"
+        "url": "https://www.elconfidencial.com",
+        "crawler": "RecursiveCrawler"
     },
     {
         "url": "https://www.antena3.com"
