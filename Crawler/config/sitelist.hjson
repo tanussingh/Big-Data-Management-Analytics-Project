@@ -9,13 +9,16 @@
       "url": "https://www.elmundo.es",
       "crawler": "RecursiveCrawler"
     },
+    # may need to drop this site
+    # a lot of category and tag pages are coming for this
     {
         "url": "https://www.elconfidencial.com",
         "crawler": "RecursiveCrawler"
     },
-    {
-        "url": "https://www.antena3.com"
-    },
+    # this site is mostly video, useless for us
+#    {
+#        "url": "https://www.antena3.com"
+#    },
     {
         "url": "https://www.20minutos.es"
     },
@@ -23,40 +26,109 @@
         "url": "http://www.rtve.es",
         "crawler": "RecursiveCrawler"
     },
-    {'url': 'http://www.elcolombiano.com/'},
-     {'url': 'https://www.larepublica.co/'},
-     {'url': 'https://www.elpais.com.co/'},
-     {'url': 'http://www.vanguardia.com/'},
-     {'url': 'http://www.eluniversal.com.co/'},
-     {'url': 'http://www.lapatria.com/'},
-     {'url': 'https://www.laopinion.com.co/'},
-     {'url': 'https://www.latarde.com.co/'},
-     {'url': 'http://www.elnuevodia.com.co/'},
-     {'url': 'https://www.yucatan.com.mx/'},
-     {'url': 'https://www.am.com.mx/'},
-     {'url': 'https://www.mural.com/'},
-     {'url': 'https://www.eldiariodechihuahua.mx/'},
-     {'url': 'https://diario.mx/'},
-     {'url': 'https://www.elsoldeparral.com.mx/'},
-     {'url': 'https://www.elnorte.com/'},
-     {'url': 'http://www.el-mexicano.com.mx/inicio.htm'},
-     {'url': 'https://www.elsudcaliforniano.com.mx/'},
-     {'url': 'https://www.diariodequeretaro.com.mx/'},
-     {'url': 'https://www.eloccidental.com.mx/'},
-     {'url': 'https://www.elsoldemexico.com.mx/'},
-     {'url': 'https://www.lavozdelafrontera.com.mx/'},
-     {'url': 'https://www.elsoldesanluis.com.mx/'},
-     {'url': 'http://www.milenio.com/'},
-     {'url': 'https://www.yucatan.com.mx/'},
-     {'url': 'https://elpais.com/'}
-     {'url': 'http://www.notimex.gob.mx/'},
-     {'url': 'https://www.proceso.com.mx/'},
-     {'url': 'http://es.presidencia.gov.co/Paginas/HomePrensa.aspx'},
-     {'url': 'https://www.univision.com'},
-     {'url': 'https://www.eltiempo.com'},
-     {'url': 'https://www.infobae.com/america/'},
-     {'url': 'https://www.elperiodico.com/es/'},
-     {'url': 'https://www.excelsior.com.mx'},
-     {'url': 'https://www.dinero.com'}
+    {
+        'url': 'http://www.elcolombiano.com/',
+        'crawler': 'RecursiveCrawler'
+    },
+    {
+        'url': 'https://www.larepublica.co/'
+    },
+    {
+        'url': 'http://www.vanguardia.com/',
+        'crawler': 'RecursiveCrawler'
+    },
+    {
+        'url': 'http://www.eluniversal.com.co/'
+    },
+    {
+        "url": "http://www.lapatria.com/"
+    },
+    {
+        "url": "https://www.laopinion.com/"
+    },
+    {
+        "url": "https://www.latarde.com.co/"
+    },
+    {
+        "url": "http://www.elnuevodia.com.co/"
+    },
+    {
+        "url": "https://www.yucatan.com.mx/"
+    },
+    {
+        "url": "https://www.am.com.mx/"
+    },
+    {
+        "url": "https://www.mural.com/"
+    },
+    {
+        "url": "https://www.eldiariodechihuahua.mx/"
+    },
+    {
+        "url": "https://diario.mx/"
+    },
+    {
+        "url": "https://www.elsoldeparral.com.mx/"
+    },
+    {
+        "url": "https://www.elnorte.com/"
+    },
+    {
+        "url": "http://www.el-mexicano.com.mx/inicio.htm"
+    },
+    {
+        "url": "https://www.elsudcaliforniano.com.mx/"
+    },
+    {
+        "url": "https://www.diariodequeretaro.com.mx/"
+    },
+    {
+        "url": "https://www.eloccidental.com.mx/"
+    },
+    {
+        "url": "https://www.elsoldemexico.com.mx/"
+    },
+    {
+        "url": "https://www.lavozdelafrontera.com.mx/"
+    },
+    {
+        "url": "https://www.elsoldesanluis.com.mx/"
+    },
+    {
+        "url": "http://www.milenio.com/"
+    },
+    {
+        "url": "https://www.yucatan.com.mx/"
+    },
+    {
+        "url": "https://elpais.com/"
+    },
+    {
+        "url": "http://www.notimex.gob.mx/"
+    },
+    {
+        "url": "https://www.proceso.com.mx/"
+    },
+    {
+        "url": "http://es.presidencia.gov.co/Paginas/HomePrensa.aspx"
+    },
+    {
+        "url": "https://www.univision.com"
+    },
+    {
+        "url": "https://www.eltiempo.com"
+    },
+    {
+        "url": "https://www.infobae.com/america/"
+    },
+    {
+        "url": "https://www.elperiodico.com/es/"
+    },
+    {
+        "url": "https://www.excelsior.com.mx"
+    },
+    {
+        "url": "https://www.dinero.com"
+    }
   ]
 }
