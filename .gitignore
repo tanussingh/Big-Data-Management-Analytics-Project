@@ -167,3 +167,6 @@ Crawler/config/.resume_jobdir/*
 /Crawler/data/
 .idea/Code.iml
 .idea/misc.xml
+
+# OS files
+.DS_Store
