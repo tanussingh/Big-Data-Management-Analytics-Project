@@ -8,7 +8,7 @@ client = MongoClient()
 db = client['big_data']
 articles = db['spanish_articles']
 
-source_folder = "../Crawler/data/data/2019/04/03/rtve.es"
+source_folder = "../Crawler/data/data/2019/05"
 
 if __name__ == "__main__":
     # read only json files and add relevant into to database
