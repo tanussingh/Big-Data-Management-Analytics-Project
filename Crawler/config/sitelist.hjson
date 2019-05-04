@@ -11,25 +11,58 @@
     #     "crawler": "RecursiveCrawler"
     # },
     # {
-    #     "url": "https://www.msn.com/es-us",
+    #     "url": "https://www.msn.com/es-es",
     #     "crawler": "RecursiveCrawler"
     # },
     # {
     #     "url": "https://www.msn.com/es-us",
     #     "crawler": "RecursiveCrawler"
     # },
-    {
-        "url": "https://www.vogue.es"
-    },
-    {
-        "url": "https://www.semana.com"
-    },
-    {
-        "url": "https://www.quien.com/"
-    },
-    {
-        "url": "https://www.cuore.es/"
-    }
+    # # graceful stop
+    # {
+    #     "url": "https://espanol.yahoo.com",
+    #     "crawler": "RecursiveCrawler"
+    # }
+    # {
+    #     "url": "https://www.vogue.es"
+    # },
+    # {
+    #     "url": "https://www.semana.com"
+    # },
+    # {
+    #     "url": "https://www.quien.com/"
+    # },
+    # {
+    #     "url": "https://www.cuore.es/"
+    # },
+    # {
+    #     "url": "https://www.americaeconomia.com"
+    # },
+    # {
+    #     "url": "https://www.criteriohidalgo.com"
+    # },
+    # {
+    #     "url": "https://www.enter.co"
+    # },
+    # {
+    #     "url": "http://glamour.es"
+    # },
+    # {
+    #     "url": "http://telva.com"
+    # },
+    # {
+    #     "url": "https://www.trendencias.com"
+    # },
+    # {
+    #     "url": "https://www.abc.es",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # {
+    #     "url": "http://lavanguardia.com"
+    # },
+    # {
+    #     "url": "https://www.publico.es"
+    # }
     # # good config with Sitemap + Recursive
     # {
     #   "url": "https://cnnespanol.cnn.com",
@@ -172,10 +205,73 @@
     #     "url": "https://www.elespectador.com/noticias",
     #     "crawler": "RecursiveCrawler"
     # },
-    # # # very less results. Can be purged if required
+    # # very less results. Can be purged if required
     # {
     #     "url": "https://actualidad.rt.com"
     # },
+    # # new sites - May 04, 2019
+    # # works with recursive crawler
+    # {
+    #     "url": "http://larazon.es",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # includes subdomain. Some older articles are also there. 
+    # {
+    #     "url": "https://www.infolibre.es",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # {
+    #     "url": "http://huffingtonpost.es",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # {
+    #     "url": "http://europapress.es",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # {
+    #     "url": "http://periodistadigital.com",
+    # },
+    # {
+    #     "url": "https://www.lavozdegalicia.es",
+    # },
+    # {
+    #     "url": "http://elespanol.com",
+    # },
+    # {
+    #     "url": "http://vozpopuli.com",
+    # },
+    # {
+    #     "url": "http://elnacional.cat",
+    # },
+    # {
+    #     "url": "http://eleconomista.es"
+    # },
+    # {
+    #     "url": "http://lne.es"
+    # },
+    # a reddit like site
+    {
+        "url": "http://meneame.net",
+        "crawler": "RecursiveCrawler"
+    },
+    # {
+    #     "url": "http://diariosur.es"
+    # },
+    # {
+    #     "url": "http://ara.cat"
+    # },
+    # {
+    #     "url": "http://esdiario.com"
+    # },
+    # {
+    #     "url": "http://heraldo.es"
+    # },
+    # {
+    #     "url": "http://diario16.com"
+    # },
+    # {
+    #     "url": "http://diariovasco.com"
+    # }
     # # has tendency to fetch English articles
     # {
     #     "url": "https://lta.reuters.com",
@@ -229,151 +325,151 @@
     #         "linked_headlines": "<=0.65"
     #     }
     # },
-   #  # 403 forbidden
-   #  {
-   #      "url": "http://www.pasionaguila.com"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.soyfutbol.com"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.laprensagrafica.com/usa/"
-   #  },
-   #  # 403 error
-   #  {
-   #      "url": "http://www.tvnotas.com.mx"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "https://www.tribuna.com.mx"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://mundohispanico.com"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.primerahora.com"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.debate.com.mx/usa/"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "http://www.el-nacional.com"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.crhoy.com"
-   #  },
-   #  # lot of results but no content
-   #  {
-   #      "url": "https://www.voanoticias.com",
-   #      "crawler": "RecursiveCrawler"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.24horas.cl"
-   #  },
-   #  # hangs the crawler
-   #  {
-   #      "url": "https://www.semana.com"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "http://www.outono.net/"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.aciprensa.com"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://miamidiario.com"
-   #  },
-   #  # graceful stop 
-   #  {
-   #      "url": "https://www.eluniversal.com",
-   #      "crawler": "RecursiveCrawler"
-   #  },
-   #  # this one hung the crawler - avoid
-   #  {
-   #      'url': 'https://www.larepublica.co/',
-   #      "crawler": "RecursiveSitemapCrawler"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "https://www.latarde.com.co/",
-   #      "crawler": "RecursiveCrawler"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "http://www.elnuevodia.com.co/",
-   #      "crawler": "RecursiveCrawler"
-   #  },
-   #  # 403 error
-   #  {
-   #      "url": "https://www.yucatan.com.mx/"
-   #  },
-   #  # internal server error
-   #  {
-   #      "url": "https://www.mural.com/"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.eldiariodechihuahua.mx/"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://diario.mx/"
-   #  },
-   #  # graceful stop called manually
-   #  {
-   #      "url": "https://www.elsoldeparral.com.mx/"
-   #  },
-   #  # internal server error
-   #  {
-   #      "url": "https://www.elnorte.com/"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "http://www.el-mexicano.com.mx/inicio.htm"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "https://www.elsudcaliforniano.com.mx/"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "https://www.diariodequeretaro.com.mx/"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "https://www.eloccidental.com.mx/"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "https://www.elsoldemexico.com.mx/"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "https://www.lavozdelafrontera.com.mx/"
-   #  },
-   #  # graceful stop
-   #  {
-   #      "url": "https://www.elsoldesanluis.com.mx/"
-   #  },
-   #  # crawler hangs
-   #  {
-   #      "url": "http://www.milenio.com/"
-   #  },
-   #  # 403 forbidden
-   #  {
-   #      "url": "https://www.yucatan.com.mx/"
-   #  },
+    # # 403 forbidden
+    # {
+    #     "url": "http://www.pasionaguila.com"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.soyfutbol.com"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.laprensagrafica.com/usa/"
+    # },
+    # # 403 error
+    # {
+    #     "url": "http://www.tvnotas.com.mx"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "https://www.tribuna.com.mx"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://mundohispanico.com"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.primerahora.com"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.debate.com.mx/usa/"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "http://www.el-nacional.com"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.crhoy.com"
+    # },
+    # # lot of results but no content
+    # {
+    #     "url": "https://www.voanoticias.com",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.24horas.cl"
+    # },
+    # # hangs the crawler
+    # {
+    #     "url": "https://www.semana.com"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "http://www.outono.net/"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.aciprensa.com"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://miamidiario.com"
+    # },
+    # # graceful stop 
+    # {
+    #     "url": "https://www.eluniversal.com",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # # this one hung the crawler - avoid
+    # {
+    #     'url': 'https://www.larepublica.co/',
+    #     "crawler": "RecursiveSitemapCrawler"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "https://www.latarde.com.co/",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "http://www.elnuevodia.com.co/",
+    #     "crawler": "RecursiveCrawler"
+    # },
+    # # 403 error
+    # {
+    #     "url": "https://www.yucatan.com.mx/"
+    # },
+    # # internal server error
+    # {
+    #     "url": "https://www.mural.com/"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.eldiariodechihuahua.mx/"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://diario.mx/"
+    # },
+    # # graceful stop called manually
+    # {
+    #     "url": "https://www.elsoldeparral.com.mx/"
+    # },
+    # # internal server error
+    # {
+    #     "url": "https://www.elnorte.com/"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "http://www.el-mexicano.com.mx/inicio.htm"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "https://www.elsudcaliforniano.com.mx/"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "https://www.diariodequeretaro.com.mx/"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "https://www.eloccidental.com.mx/"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "https://www.elsoldemexico.com.mx/"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "https://www.lavozdelafrontera.com.mx/"
+    # },
+    # # graceful stop
+    # {
+    #     "url": "https://www.elsoldesanluis.com.mx/"
+    # },
+    # # crawler hangs
+    # {
+    #     "url": "http://www.milenio.com/"
+    # },
+    # # 403 forbidden
+    # {
+    #     "url": "https://www.yucatan.com.mx/"
+    # },
    # # video website, not very useful
    #  {
    #      "url": "https://www.telemundo.com",

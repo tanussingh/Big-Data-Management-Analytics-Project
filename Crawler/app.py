@@ -45,7 +45,7 @@ if __name__ == '__main__':
                     filepath = join(dir_path, filename)
                     with open(filepath, 'r') as f:
                         data = json.load(f)
-                        if data['text'] is not None:
+                        if data['text'] is not None and data['language'] == 'es':
                             if articles.find_one({'url': data['url']}) is None:
                                 articles.insert_one({
                                     'url': data['url'],

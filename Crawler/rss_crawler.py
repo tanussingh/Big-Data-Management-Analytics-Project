@@ -58,7 +58,7 @@ if __name__ == "__main__":
             try:
                 article = NewsPlease.from_url(entry['link'])
 
-                if articles.find_one({'url': article.url}) is None:
+                if article.language == 'es' and articles.find_one({'url': article.url}) is None:
                     articles.insert_one({
                         'url': article.url,
                         'domain': article.source_domain,
