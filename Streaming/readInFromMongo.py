@@ -4,7 +4,6 @@ from kafka import KafkaProducer
 from time import sleep
 import json, sys, requests, time
 
-
 def publish_message(producer_instance, topic_name, value):
     try:
         key_bytes = bytes('foo', encoding='utf-8')
@@ -42,16 +41,16 @@ if __name__== "__main__":
     fileName = sys.argv[1]
     start = sys.argv[2]
     end = sys.argv[3]
-    dbArticles = client.fileName
+    dbArticles = client['big_data']
 
     # Set connection to database
     collection_Article = dbArticles['spanish_articles']
 
     #Write data onto Kafka
-    if len(collection_Article)>0:
+    if (collection_Article.count()) > 0:
         prod=connect_kafka_producer();
-        for story in collection_Article:
-            print(json.dumps(story))
+        for story in collection_Article.find():
+            print(story)
             publish_message(prod, 'SpanishArticles', story)
             time.sleep(1)
         if prod is not None:
