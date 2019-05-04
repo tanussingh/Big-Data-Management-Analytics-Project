@@ -1,23 +1,20 @@
 #Import Files
-import sys
+import os
+os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 pyspark-shell'
 from pyspark import SparkContext, SparkConf
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
-from uuid import uuid1
 
-if __name__ == “__main__”:
-    sc = SparkContext(appName=”PythonStreamingRecieverKafkaWordCount”)
-    ssc = StreamingContext(sc, 2) # 2 second window
+if __name__ == "__main__":
+    sc = SparkContext(appName="PythonStreamingRecieverKafkaWordCount")
+    sc.setLogLevel("WARM")
+    ssc = StreamingContext(sc, 60) # Batch duration set to 60secs
 
     #Get topic name and broker information from user
-    broker, topic = sys.argv[1:]
     topic = 'SpanishArticles'
-    kvs = KafkaUtils.createStream(ssc, broker, “raw-articles-streaming-consumer”,\{topic:1})
+    kvs = KafkaUtils.createDirectStream(ssc, ['SpanishArticles'], {'metadata.broker.list':'localhost:9092'})
     lines = kvs.map(lambda x: x[1])
     ##Manipulate the data however
-    counts = lines.flatMap(lambda line: line.split(“ “))
-                  .map(lambda word: (word, 1)) \
-                  .reduceByKey(lambda a, b: a+b)
 
     ssc.start()
     ssc.awaitTermination()
