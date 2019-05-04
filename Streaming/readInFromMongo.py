@@ -65,6 +65,6 @@ if __name__== "__main__":
             story = json.dumps(story, cls=CustomJSONEncoder)
             print(story)
             publish_message(prod, 'SpanishArticles', story)
-            sleep(3)
+            sleep(1)
         if prod is not None:
                 prod.close()
