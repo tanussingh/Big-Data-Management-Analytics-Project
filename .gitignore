@@ -164,3 +164,9 @@ Crawler/config/.resume_jobdir/*
 
 # UDPipe models
 *.udpipe
+/Crawler/data/
+.idea/Code.iml
+.idea/misc.xml
+
+# OS files
+.DS_Store
