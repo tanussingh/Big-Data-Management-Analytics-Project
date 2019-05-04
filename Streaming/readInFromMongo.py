@@ -7,7 +7,7 @@ import json, sys, requests, time
 def publish_message(producer_instance, topic_name, value):
     try:
         key_bytes = bytes('foo', encoding='utf-8')
-        value_bytes = bytes(value, encoding='utf-8')
+        value_bytes = bytes(str(value), encoding='utf-8')
         producer_instance.send(topic_name, key=key_bytes, value=value_bytes)
         producer_instance.flush()
         print('Message published successfully.')
@@ -52,6 +52,5 @@ if __name__== "__main__":
         for story in collection_Article.find():
             print(story)
             publish_message(prod, 'SpanishArticles', story)
-            time.sleep(1)
         if prod is not None:
                 prod.close()
