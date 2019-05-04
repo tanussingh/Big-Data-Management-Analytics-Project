@@ -3,94 +3,124 @@ import re
 import json
 from ufal.udpipe import Model, Pipeline, ProcessingError  # pylint: disable=no-name-in-module
 
-# In Python2, wrap sys.stdin and sys.stdout to work with unicode.
-if sys.version_info[0] < 3:
-    import codecs
-    import locale
-    encoding = locale.getpreferredencoding()
-    sys.stdin = codecs.getreader(encoding)(sys.stdin)
-    sys.stdout = codecs.getwriter(encoding)(sys.stdout)
+def udpipe_parse(text):
+    processed = pipeline.process(text, error)
+    if error.occurred():
+        sys.stderr.write("An error occurred when running run_udpipe: ")
+        sys.stderr.write(error.message)
+        sys.stderr.write("\n")
+        sys.exit(1)
 
-if len(sys.argv) < 4:
-    sys.stderr.write('Usage: %s input_format(tokenize|conllu|horizontal|vertical) output_format(conllu) model_file\n' % sys.argv[0])
-    sys.exit(1)
+    processed = processed.split('\n')
+    par_id = 0
+    sent_id = -1
+    parse_table = []
+    for line in processed:
+        # ignore blank lines
+        if len(line) == 0:
+            continue
 
-sys.stderr.write('Loading model: ')
-model = Model.load(sys.argv[3])
-if not model:
-    sys.stderr.write("Cannot load model from file '%s'\n" % sys.argv[3])
-    sys.exit(1)
-sys.stderr.write('done\n')
+        # found new paragraph comment
+        if line == '# newpar':
+            par_id += 1
 
-pipeline = Pipeline(model, sys.argv[1], Pipeline.DEFAULT, Pipeline.DEFAULT, sys.argv[2])
-error = ProcessingError()
+        # found new sentence comment
+        if '# sent_id =' in line:
+            sentence_comment = line.split('=')
+            sent_id = int(sentence_comment[1].strip())
 
-# Read whole input
-text = "Resultados NBA del viernes: Indiana 118 Portland 113\nOrlando 103 Oklahoma City 102\nLA Lakers 112 Philadelphia 98 Cleveland 115 Washington 113 Boston 99 Sacramento 89 Detroit 111 Brooklyn 95 Pelicans 98 - Timberwolves 91 NY Knicks 117 Denver 90 Dallas 103 Utah 81\nEsta vez sí, el veterano base canadiense Steve Nash reivindicó su condición de líder y jugó su mejor partido en lo que va de temporada con Los Ángeles Lakers a los que guió al triunfo a domicilio (98-112) ante Sixers.\nNash, aunque sólo jugó 28 minutos, se encargó de encarrilar el partido en el segundo cuarto al conseguir un parcial de 29-35 y los Lakers sentenciaron en el cuarto (13-25), mientras que el veterano base lograba 19 puntos (8-15, 0-2, 3-4) --mejor marca de la temporada-- repartió cinco asistencias y capturó cuatro rebotes.\nOtros cinco jugadores de los Lakers, incluidos tres titulares, también tuvieron números de dos dígitos, con el alero Wesley Johnson y el pívot reserva Chris Kaman, que aportaron 17 puntos cada uno.\nKaman hizo una excelente labor bajo los aros al capturar ocho rebotes, los mismos que tuvo el ala-pivot novato Ryan Kelly, que también anotó 15 puntos, y Johnson recuperó cinco balones y puso tres tapones.\nEl base Steve Blake se encargó de dirigir el juego y logró 14 tantos, ocho asistencias, cuatro rebotes y dos recuperaciones de balón.\nA pesar de las bajas de sus mejores encestadores, el ala-pívot español Pau Gasol, el escolta Kobe Bryant y el escolta-alero Nick Young, todos lesionados, los Lakers jugaron su mejor baloncesto de equipo al conseguir un 51 (45-89) por ciento de acierto en los tiros de campo y el 44 (8-18) de triples.\nLa victoria, segunda consecutiva que consiguen los Lakers (18-32) después de siete derrotas seguidas, no evita que sigan en el último lugar de la División Pacífico.\nLos Sixers dominaron a los Lakers en los balones por alto al capturar 50 rebotes por 40, pero no tuvieron la misma eficacia encestadora y ahí estuvo la diferencia final en el marcador.\nDerrota sobre la bocina de Thunder El alero Tobías Harris se convirtió en el protagonista de la canasta que permitió a los Magic de Orlando vencer 103-102 a los Thunder de Oklahoma City cuando sonaba la bocina final del partido. Los árbitros tuvieron que revisar la jugada y asegurarse de que el balón salió de la mano de Harris antes de que sonase la bocina y confirmaron que la canasta fue válida. Los Thunder tuvieron la posibilidad de haber conseguido la victoria si Durant no hubiese fallado 2,9 segundos antes el tiro el suspensión que el rebote fue capturado por el escolta novato Vitor Oladipo, que pasó el balón al alero Maurice Harkless y en el saque rápido se lo dio a Harris, máximo encestador del equipo con 18 tantos. El pívot suizo Nikola Vucevic fue el líder en el juego bajo los aros al conseguir un doble-doble de 10 puntos, 10 rebotes y dos asistencias, que ayudaron a los Magic a romper una racha de cinco derrotas consecutivas que tenían en los duelos contra los Thunder. Una vez más, el alero Kevin Durant, a pesar de fallar el tiro que dio la oportunidad a los Magic de conseguir la victoria, volvió a ser el líder del ataque de los Thunder al aportar un doble-doble de 29 puntos, 12 asistencias, cinco rebotes y perdió seis balones. Durant se convirtió en el cuarto jugador que esta temporada logra al menos 25 puntos y 10 asistencias y empató su mejor marca como profesional al dar 12 pases de anotación, que estableció el 1 de diciembre del 2013 ante los Timberwolves de Minnesota. El ala-pívot congoleño, nacionalizado español, Serge Ibaka, volvió a mostrar el gran momento de juego ofensivo por el que atraviesa al aportar 26 puntos y capturar seis rebotes, incluido cinco defensivos, después de disputar 40 minutos. Ibaka anotó 10 de 13 tiros de campo, incluido un triple, encestó 5 de 6 desde la línea de personal, dio una asistencia e impuso su poder bajo los aros al poner cinco tapones. Pero no fueron suficientes a la hora de evitar la derrota (40-12), que les rompió la racha de dos triunfos consecutivos, y fue la segunda en los últimos 10 partidos disputados. Los Thunder siguen como líderes de la División Noroeste.\nCalderón dirigió el ataque en la victoria de Dallas Excelenta labor de equipo la que realizaron los Mavericks de Dallas que tuvieron al escolta Monta Ellis y al ala-pívot alemán Dirk Nowitzki como los líderes encestadores y al base español José Manuel Calderón de director del juego que los guió al triunfo fácil de 103-81 ante los Jazz de Utah. Ellis anotó 22 puntos y Nowitzki, aunque jugó sólo 26 minutos, logró otros 20 que los dejaron al frente de la lista de cuatro jugadores titulares que tuvieron números de dos dígitos, entre ellos Calderón que aportó 12, los mismos que tuvo el pívot haitiano Samuel Dalembert. Calderón, que jugó 33 minutos, encestó 4 de 11 tiros de campo, incluidos cuatro triples en siete intentos, y no fue a la línea de personal. El base de Villanueva de la Serena se encargó también de dirigir el ataque de los Mavericks y repartió siete asistencias --líder del equipo en esa faceta del juego--, capturó cuatro rebotes, y recupero dos balones. La victoria fue la cuarta consecutiva que lograron los Mavericks (30-21) y les permitió empatar la mejor racha ganadora en lo que va de temporada, además de ponerse por primera vez nueve juegos arriba del par de la marca, algo que sólo ha conseguido por dos veces desde la temporada del 2010-11 cuando ganaron el título de campeones de liga. El ala-pivote Marvin Williams surgió con 21 puntos, incluidos cinco triples, y cinco rebotes, pero no fueron suficientes a la hora de evitar la cuarta derrota consecutiva que sufrieron los Jazz (16-33) que ya están en la lista de los equipos de lotería.\nLos Pelicans se imponen a los 'Wolves' El ala-pivote Anthony Davis vivió una jornada completa al ser el jugador que sustituya a Kobe Bryant (lesionado) en el equipo de la Conferencia Oeste para el Partido de las Estrellas y los Pelicans de Nueva Orleans lograron el triunfo(98-91) ante los Timberwolves de Minnesota. Davis respondió como líder indiscutible de los Pelicans al conseguir un doble-doble de 26 puntos y 10 rebotes, incluidos ocho defensivos, que fueron claves en la victoria de los Pelicans (22-27). El acierto ofensivo de Davis permitió a los Pelicans remontar una desventaja de 10 tantos. Los Pelicans, que anotaron 13 de 20 tiros de campo en el cuarto periodo, superaron a los Timberwolves con parcial de 37-20, que cambió la historia del partido. El ala-pivote estrella de los Timberwolves, Kevin Love, no perdió el duelo individual con Davis al conseguir un doble-doble de 26 puntos, 19 rebotes y tres asistencias, pero tampoco pudo evitar la derrota de su equipo, la segunda consecutiva que sufrieron. El base español Ricky Rubio no estuvo acertado en los tiros a canasta y aportó 11 puntos en los 33 minutos que disputó. Rubio anotó 3 de 10 tiros de campo, incluido un triple en dos intentos, y estuvo perfecto desde la línea de personal al encestar 4 de 4. Además de repartir seis asistencias, capturar cinco rebotes, incluidos cuatro defensivos, recuperó un balón, perdió tres y puso un tapón."
-text = re.sub(r'\n+', '\n\n', text)
-# text = ''.join(sys.stdin.readlines())
+        # found actual parse token
+        if line[0] != '#':
+            parse_fields = line.split('\t')
 
-# Process data
-processed = pipeline.process(text, error)
-if error.occurred():
-    sys.stderr.write("An error occurred when running run_udpipe: ")
-    sys.stderr.write(error.message)
-    sys.stderr.write("\n")
-    sys.exit(1)
+            if len(parse_fields) == 10:
+                parse_token = dict()
+                parse_token['SentID'] = sent_id
+                parse_token['ParID'] = par_id
+                parse_token['Id'] = parse_fields[0]
+                parse_token['Form'] = parse_fields[1]
+                parse_token['Lemma'] = parse_fields[2]
+                parse_token['UPosTag'] = parse_fields[3]
+                parse_token['XPosTag'] = parse_fields[4]
+                parse_token['Feats'] = parse_fields[5]
+                parse_token['Head'] = parse_fields[6]
+                parse_token['DepRel'] = parse_fields[7]
+                parse_token['Deps'] = parse_fields[8]
+                parse_token['Misc'] = parse_fields[9]
+                parse_table.append(parse_token)
 
-processed = processed.split('\n')
-par_id = 0
-sent_id = -1
-parse_table = []
-for line in processed:
-    # ignore blank lines
-    if len(line) == 0:
-        continue
+    parse_pos = {
+        'PROPN': set(),
+        'VERB': set(),
+        'NUM': set(),
+        'AUX': set(),
+        'NOUN': set(),
+    }
 
-    # found new paragraph comment
-    if line == '# newpar':
-        par_id += 1
+    for token in parse_table:
+        for pos in parse_pos:
+            if token['UPosTag'] == pos:
+                parse_pos[pos].add(token['Lemma'])
 
-    # found new sentence comment
-    if '# sent_id =' in line:
-        sentence_comment = line.split('=')
-        sent_id = int(sentence_comment[1].strip())
-
-    # found actual parse token
-    if line[0] != '#':
-        parse_fields = line.split('\t')
-
-        parse_token = dict()
-        parse_token['SentID'] = sent_id
-        parse_token['ParID'] = par_id
-        parse_token['Id'] = parse_fields[0]
-        parse_token['Form'] = parse_fields[1]
-        parse_token['Lemma'] = parse_fields[2]
-        parse_token['UPosTag'] = parse_fields[3]
-        parse_token['XPosTag'] = parse_fields[4]
-        parse_token['Feats'] = parse_fields[5]
-        parse_token['Head'] = parse_fields[6]
-        parse_token['DepRel'] = parse_fields[7]
-        parse_token['Deps'] = parse_fields[8]
-        parse_token['Misc'] = parse_fields[9]
-
-        parse_table.append(parse_token)
-
-parse_pos = {
-    'PROPN': set(),
-    'VERB': set(),
-    'NUM': set(),
-    'AUX': set(),
-    'NOUN': set(),
-}
-
-for token in parse_table:
     for pos in parse_pos:
-        if token['UPosTag'] == pos:
-            parse_pos[pos].add(token['Lemma'])
+        parse_pos[pos] = list(parse_pos[pos])
 
-for pos in parse_pos:
-    parse_pos[pos] = list(parse_pos[pos])
+    return parse_table, parse_pos
 
-print(parse_table)
-print(parse_pos)
+def jacc_sim(set1, set2):
+    set1 = set(set1)
+    set2 = set(set2)
+
+    print(set1 & set2)
+
+    set_intersection_size = len(set1 & set2)
+    set_union_size = len(set1 | set2)
+
+    return set_intersection_size / set_union_size
+
+
+
+
+if __name__ == '__main__':
+    # In Python2, wrap sys.stdin and sys.stdout to work with unicode.
+    if sys.version_info[0] < 3:
+        import codecs
+        import locale
+        encoding = locale.getpreferredencoding()
+        sys.stdin = codecs.getreader(encoding)(sys.stdin)
+        sys.stdout = codecs.getwriter(encoding)(sys.stdout)
+
+    if len(sys.argv) < 4:
+        sys.stderr.write('Usage: %s input_format(tokenize|conllu|horizontal|vertical) output_format(conllu) model_file\n' % sys.argv[0])
+        sys.exit(1)
+
+    sys.stderr.write('Loading model: ')
+    model = Model.load(sys.argv[3])
+    if not model:
+        sys.stderr.write("Cannot load model from file '%s'\n" % sys.argv[3])
+        sys.exit(1)
+    sys.stderr.write('done\n')
+
+    pipeline = Pipeline(model, sys.argv[1], Pipeline.DEFAULT, Pipeline.DEFAULT, sys.argv[2])
+    error = ProcessingError()
+
+    # Read whole input
+    text = "Desde que los fiscales estadounidenses anunciaron en marzo los cargos contra 50 personas en una amplia investigación de fraude en el sistema de admisión a las universidades, se toparon con un caso misterioso: una familia dice que le pagó a un consultor universitario 6,5 millones de dólares, mucho más que cualquiera de los padres mencionados en la investigación, para que su hija ingresara a la universidad.\n[Si quieres recibir los mejores reportajes de The New York Times en Español en tu correo suscríbete aquí a El Times]\nLa estudiante es Yusi Zhao, quien fue admitida en Stanford en 2017, según una persona que conoce la investigación. Ni ella ni sus padres, que viven en Pekín, han sido acusados, y no está claro si actualmente se les investiga. Stanford rescindió la admisión de Zhao en abril y ya no estudia allí.\nLa persona que conoce la investigación dijo que la familia de Zhao fue presentada al asesor en universidades, William Singer, por un asesor financiero de Morgan Stanley con sede en Pasadena, llamado Michael Wu. Una portavoz de Morgan Stanley dijo que Wu había sido despedido por no cooperar con una investigación interna sobre el asunto y que la firma estaba cooperando con las autoridades. Wu no respondió a una llamada telefónica.\nEn una audiencia judicial en marzo, el fiscal principal en el caso de las admisiones, Eric S. Rosen, dijo que Singer había intentado que Zhao, a quien Rosen no identificó por su nombre, fuera reclutada por Stanford y creó un perfil falso de sus supuestos logros deportivos en vela.\nAl final no fue reclutada pero Rosen dijo que, en parte, fue admitida en Stanford debido a esas credenciales falsas y que, luego de entrar a la universidad, Singer hizo una donación de 500.000 al programa de vela de Stanford.\nSinger se declaró culpable de extorsión y otros cargos, por idear un plan que los fiscales dicen que incluye trampas en los exámenes de ingreso a la universidad y sobornar a entrenadores para reclutar a estudiantes que realmente no eran atletas competitivos.\nEl exentrenador de vela de Stanford, John Vandemoer, se declaró culpable de conspiración para cometer extorsión. Según el testimonio de Rosen en su audiencia de declaración de culpabilidad, Vandemoer no ayudó a la aplicación de Zhao “de ninguna manera material”, sino que aceptó otras donaciones de Singer a su programa con la finalidad de reservar puestos de reclutamiento para los clientes de Singer. El abogado de Vandemoer, Robert Fisher, declinó hacer comentarios.\nZhao, cuya identidad fue dada a conocer por primera vez por Los Angeles Times, parece haber participado en una conferencia reciente organizada por Princeton-U.S. China Coalition. En su biografía en el sitio web del grupo dice que quiere especializarse en psicología y estudios del este de Asia y que está interesada en las políticas educativas de China. Agregó que esperaba involucrarse en el gobierno chino en el futuro.\nZhao trabajó durante un verano reciente en un laboratorio de investigación de biología y química en Harvard, bajo la dirección de Daniel G. Nocera, profesor de energía en la universidad. Nocera dijo en un correo electrónico que a Zhao no se le pagaba y que trabajaba para recibir crédito académico en Stanford.\nEl miércoles en el campus de Stanford, algunos estudiantes no parecieron perturbarse por la noticia de que una persona había pagado millones para estudiar allí. Tamara Morris, una joven de 20 años que estudia ciencia política y estudios afroamericanos, dijo que desconocía el caso Zhao.\nLa conversación sobre el escándalo de admisión a la universidad se había calmado en las últimas semanas en el campus, dijo Morris, y agregó que la noticia no la molestó particularmente. “Yo sé cómo entré”, dijo."
+    text = re.sub(r'\n+', '\n\n', text)
+
+    text2 = "La madre de una estudiante china que ingresó a la Universidad de Stanford dijo que la familia le dio 6,5 millones de dólares al hombre en el centro de un fraude masivo de admisión a la universidad como una donación para becas y fondos.\nCincuenta personas han sido acusadas en la estafa de admisión a universidades más grande jamás procesada en Estados Unidos. El escándalo ha atrapado a celebridades como Felicity Huffman y Lori Loughlin, ninguna de las cuales gastó tanto como la mujer de nacionalidad china.\nEn una declaración proporcionada a través de su abogado, la mujer identificada como la señora Zhao admite haber otorgado 6,5 millones de dólares a la fundación de William “Rick” Singer, el líder de la estafa.\nZhao dijo que había buscado servicios de asesoría universitaria porque no estaba familiarizada con el proceso de admisión para las universidades en Estados Unidos.\nDespués de que su hija llegó a Stanford, según la declaración, Singer le pidió una donación a la universidad a través de su fundación. Singer le dijo que la donación era “para los sueldos del personal académico, becas, programas de atletismo y para ayudar a los estudiantes que de otra manera no podrían permitirse asistir a Stanford”, dijo Zhao.\nLa declaración de su abogado, Vincent Law, no proporcionó su nombre de pila ni información sobre su esposo o su hija.\nprinceton-campus\nPero en un video de 2017 publicado en la popular plataforma china Douyu, una estudiante que se identificó como Yusi Zhao dijo que fue admitida en Stanford a través de su propio trabajo.\n“Este año me admitieron en Stanford. Tengo mucha suerte de decirlo”, dijo Zhao en el video de 90 minutos. “Quiero decirles a todos que gané mi admisión en Stanford a través de mi propio esfuerzo… no me estaba yendo bien académicamente cuando estaba en la escuela primaria, pero ahora puedo ir a Stanford después de trabajar duro”.\nYusi Zhao es hija del multimillonario chino Zhao Tao, presidente de Shandong Buchang Pharmaceuticals, según el Stanford Daily.\nZhao Tao respondió a los informes de los medios de comunicación en un comunicado publicado en el sitio web de su compañía diciendo: “El estudio de mi hija en EE.UU. es un problema personal y familiar”, y no tiene vínculos con Shandong Buchang Pharmaceuticals.\nLa madre dice que fue víctima de la estafa\nAunque la compañía de Singer proporcionó “servicios de asesoría educativa”, dijo, no garantizaba la admisión en ninguna escuela. Su hija tiene un historial de “buen rendimiento académico y logros extracurriculares”, y recibió ofertas de varias universidades de Estados Unidos, dijo.\n“Desde que se informaron ampliamente los asuntos relacionados con el señor Singer y su fundación, la señora Zhao notó que la han engañado, se han aprovechado su generosidad y su hija ha sido víctima de estafa”, se lee en la declaración.\nEl exasesor de Morgan Stanley Michael Wu dijo que refirió a los padres a Singer.\n“El Sr. Wu fue presentado a Rick Singer a través de Morgan Stanley como una fuente confiable. Singer, en un esfuerzo por llenar sus propios bolsillos con millones de dólares de un cliente de Morgan Stanley, dijo en un correo electrónico, antes de realizar cualquier pago, que el dinero se pagaría a la Universidad de Stanford “para dotar a los sueldos y becas del personal” y “para financiar los programas especiales de atletismo y los programas de proyección de la universidad para ayudar a los necesitados a que puedan asistir a Stanford”, dijo Wu en una declaración a través de su abogado.\nUna portavoz de Morgan Stanley le dijo a CNN que la compañía está cooperando con los investigadores y dijo que Wu había sido despedido de su trabajo.\nEn un comunicado, la Universidad de Stanford dijo que no recibió los millones de dólares y que no lo sabía antes de que se informara ampliamente.\n“Es importante aclarar que Stanford no recibió $ 6,5 millones de Singer, o de la familia de un estudiante que trabaja con Singer”, dijo. “Stanford no estaba al tanto de este pago de $ 6,5 millones de la familia a Singer”.\nLa estudiante, sus padres y el hombre que los presentó no han sido acusados en el escándalo.\nLos fiscales denuncian a 50 personas\nDe las 50 personas acusadas, 33 son padres. Se les acusa de conspirar para usar su riqueza para obtener una ventaja en el sistema de admisión a la universidad. Un total de 17 padres adinerados, incluida Loughlin, presentaron formalmente declaraciones de culpabilidad en un tribunal federal de Boston esta semana.\nLos fiscales alegan que la actriz y su esposo, Mossimo Giannulli, pagaron medio millón de dólares a una caridad falsa para que sus dos hijas fueran admitidas en la Universidad del Sur de California, designándolas falsamente como reclutas de sus equipos deportivos.\nLa actriz de “Full House” es la figura de más alto perfil atrapada en un escándalo que ha involucrado a docenas de padres adinerados, entrenadores universitarios y administradores de exámenes estandarizados.\nHuffman estuvo entre más de una docena de padres que se declararon culpables de un cargo de conspiración para cometer fraude el mes pasado. A cambio de la declaración de culpabilidad, los fiscales dijeron que recomendarán el encarcelamiento en el “extremo bajo” del rango de sentencia y no presentarán más cargos contra ella.\nSinger se declaró culpable y está cooperando con el gobierno.\nEl plan maestro de la universidad obtuvo 25 millones de dólares\nSinger era dueño de un negocio de preparación y asesoramiento universitario, y se desempeñó como presidente ejecutivo de Key Worldwide Foundation, la organización benéfica conectada a este.\nA través de esas organizaciones, supuestamente facilitó las trampas en las pruebas estandarizadas y sobornó a los entrenadores y administradores de la universidad para que designaran falsamente a los niños como atletas reclutados, incluso si no practicaban ese deporte.\nLas estrellas de Hollywood, los directores ejecutivos principales, los entrenadores universitarios y los administradores de exámenes estandarizados supuestamente participaron en el esquema para engañar a los exámenes y admitir a los estudiantes en instituciones líderes como atletas, independientemente de sus habilidades. Al menos ocho universidades, entre ellas Stanford y la Universidad del Sur de California, se mencionan en una acusación federal y una denuncia penal.\nLos padres pagaron a Singer alrededor de 25 millones de dólares como parte del plan, dijo Andrew Lelling, el abogado de Estados Unidos para Massachusetts. Parte de ese dinero fue a los administradores de pruebas y entrenadores involucrados en la estafa, dijeron los fiscales."
+    text2 = re.sub(r'\n+', '\n\n', text2)
+    # text = ''.join(sys.stdin.readlines())
+
+    # Process data
+    parse_table, parse_pos = udpipe_parse(text)
+
+    print(parse_pos['PROPN'])
+
+    parse_table2, parse_pos2 = udpipe_parse(text2)
+
+    print(parse_pos2['PROPN'])
+
+    propn_sim = jacc_sim(parse_pos['PROPN'], parse_pos2['PROPN'])
+    print(propn_sim)
+
