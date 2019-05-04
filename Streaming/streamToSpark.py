@@ -1,18 +1,24 @@
 #Import Files
 import os
 os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 pyspark-shell'
-from pyspark import SparkContext, SparkConf
+from pyspark.sql import SparkSession
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 
+spark = SparkSession \
+         .builder \
+         .appName('PythonStreamingRecieverKafkaWordCount') \
+         .getOrCreate()
+
 def do_something(rdd):
-    please = rdd.collect()
-    print(please)
+    json_rdd = rdd.map(lambda x: x[1])
+    df = spark.read.json(json_rdd)
+    df.show()
 
 if __name__ == "__main__":
-    sc = SparkContext(appName="PythonStreamingRecieverKafkaWordCount")
+    sc = spark.sparkContext
     sc.setLogLevel("WARN")
-    ssc = StreamingContext(sc, 5)  # Batch duration set to 60secs
+    ssc = StreamingContext(sc, 10)  # Batch duration set to 60secs
 
     #Get topic name and broker information from user
     topic = 'SpanishArticles'
