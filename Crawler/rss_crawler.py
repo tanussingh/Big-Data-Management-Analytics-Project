@@ -6,7 +6,6 @@ from newsplease import NewsPlease
 from feedfinder2 import find_feeds
 import feedparser
 from pymongo import MongoClient
-from datetime import datetime
 import hjson
 from tqdm import tqdm
 
