@@ -170,3 +170,7 @@ Crawler/config/.resume_jobdir/*
 
 # OS files
 .DS_Store
+
+# model files
+*.model
+misc/models/
