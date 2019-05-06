@@ -24,6 +24,4 @@ def getDF():
             articles.append(story)
 
     df = pd.DataFrame(articles, columns = ['_id', 'url', 'domain', 'date_modify', 'date_publish', 'title', 'description', 'text', 'authors'])
-    print(df.head(25))
-
-if __name__=="__main__": getDF()
+    return(df)
