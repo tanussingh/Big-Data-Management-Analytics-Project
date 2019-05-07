@@ -8,7 +8,7 @@ from misc import text_processing
 from misc.doc2vec import EpochLogger
 import pandas as pd
 
-m = Doc2Vec.load("../misc/models/doc2vec_1_day_2.model")
+m = Doc2Vec.load("../misc/models/doc2vec_2019.model")
 
 
 def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
@@ -29,6 +29,7 @@ def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
     DataFrame
     """
     similarity_values = []
+    similarity_numbers = []
     # We can search the full index but limiting to 33% could be faster as we will definitely have more than 3 topics
     similar_docs_limit = len(df)
     current_articles = set(df['url'])
@@ -50,10 +51,13 @@ def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
                            for doc in similarity
                            if doc[0] in current_articles and doc[1] > similarity_threshold and doc[0] != article.url}
         similarity_values.append(similarity_dict)
+        similarity_numbers.append(len(similarity_dict))
 
     similarity_values = pd.Series(similarity_values)
+    similarity_numbers = pd.Series(similarity_numbers)
 
     df['doc2vec_scores'] = similarity_values
+    df['doc2vec_duplicates'] = similarity_numbers
     return df
 
 
