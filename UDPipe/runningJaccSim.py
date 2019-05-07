@@ -43,7 +43,7 @@ for index, row in df_d2v.iterrows():
         simList[url2] = valuejacc
     row = {'url': url1, 'SimilarityList': json.dumps(simList), 'TotalNumDups': len(simList)}
     df_out = df_out.append(row, ignore_index=True)
-    print("------------------- DONE")
+    print("------------------- " ,url1)
 
 dbCol = dbArticles['jacc_sim_calculated']
 dbCol.insert_many(df_out.to_dict(orient='records'))
