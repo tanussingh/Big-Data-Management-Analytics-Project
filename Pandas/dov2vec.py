@@ -6,12 +6,57 @@ import time
 from tqdm import tqdm
 from misc import text_processing
 from misc.doc2vec import EpochLogger
+from gensim.matutils import cossim, dense2vec
 import pandas as pd
 
 m = Doc2Vec.load("../misc/models/doc2vec_2019.model")
 
 
-def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
+def calculate_single_document_vector(document=None, model=m):
+    """
+    Calculate vector from a single document
+    Parameters
+    ----------
+    document: str
+        A list of words. Should be preprocessed
+    model: Doc2Vec
+        A pre-trained doc2vec model
+
+    Returns
+    -------
+    list
+    """
+    if document is None:
+        return []
+
+    return m.infer_vector(document.split())
+
+
+def calculate_document_vectors(df, col='cleaned_text', new='d2v_vector', model=m):
+    """
+    Take a pandas dataframe and for each document, calculate vector
+    Parameters
+    ----------
+    df: DataFrame
+    col: str
+        Column where old text is saved
+    new: str
+        New column to add
+    model: Doc2Vec
+        A pre-trained Doc2Vec model
+
+    Returns
+    -------
+    DataFrame
+    """
+    if col not in df.columns:
+        raise ValueError("Given dataframe doesn't have text column", col, ". Columns:", df.columns)
+
+    df[new] = df.apply(lambda row: calculate_single_document_vector(row[col], model=model), axis=1)
+    return df
+
+
+def calculate_similarity(df, similarity_threshold=0.6, model=m, verbose=False):
     """
     Take a pandas dataframe and add a new column with similarity scores
 
@@ -19,6 +64,8 @@ def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
     ----------
     df: DataFrame
         A pandas dataframe.
+    similarity_threshold: float
+        Minimum similarity threshold below which similarity will be ignored
     model: Dov2Vec
         A pre-trained Doc2Vec model
     verbose: bool
@@ -28,53 +75,32 @@ def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
     -------
     DataFrame
     """
-    similarity_values = []
-    inferred_vectors = []
-    # We can search the full index but limiting to 33% could be faster as we will definitely have more than 3 topics
-    similar_docs_limit = len(df)
-    current_articles = set(df['url'])
+    similarity_scores = []
+    df_v = calculate_document_vectors(df, model=model)
+    num_articles = len(df_v)
 
-    for article in df.itertuples():
+    for article in df_v.itertuples():
         if verbose:
-            print("Computing vector for ", article.url, " [", article.Index, "/", len(df), "] - ",
-                  datetime.strftime(datetime.now(), "%H:%M:%S"), sep="")
+            print("Processing ", article.url, " [", article[0], "/", num_articles, "]",
+                  " - ", datetime.strftime(datetime.now(), "%H:%M:%S"), sep="")
+        score = {}
+        for compared in df_v.itertuples():
+            # don't compare with current article
+            if article.url == compared.url:
+                continue
+            similarity = cossim(dense2vec(article.d2v_vector), dense2vec(compared.d2v_vector))
+            if similarity > similarity_threshold:
+                score[compared.url] = similarity
+        similarity_scores.append(score)
 
-        if article.cleaned_text is None:
-            inferred_vectors.append([])
-
-        inferred_vector = model.infer_vector(article.cleaned_text.split())
-        inferred_vectors.append(inferred_vector)
-
-    i = 0
-    for article in df.itertuples():
-        if verbose:
-            print("Processing ", article.url, " [", article.Index, "/", len(df), "] - ",
-                  datetime.strftime(datetime.now(), "%H:%M:%S"), sep="")
-        current_scores = dict()
-        if article.cleaned_text is None:
-            similarity_values.append(current_scores)
-            i += 1
-            continue
-        # get top 20 most similar articles
-        inferred_vector = inferred_vectors[i]
-        similarity = model.docvecs.most_similar([inferred_vector], topn=similar_docs_limit)
-        # convert tuples to dictionary for easy
-        similarity_dict = {doc[0]: doc[1]
-                           for doc in similarity
-                           if doc[0] in current_articles and doc[1] > similarity_threshold and doc[0] != article.url}
-        similarity_values.append(similarity_dict)
-        i += 1
-
-    similarity_values = pd.Series(similarity_values)
-
-    df['doc2vec_scores'] = similarity_values
-    df['doc2vec_duplicates'] = df.apply(lambda row: len(row.doc2vec_scores), axis=1)
-    return df
+    df_v['d2v_sim'] = pd.Series(similarity_scores)
+    df_v['d2v_dup_count'] = df_v.apply(lambda row: len(row.d2v_sim), axis=1)
+    return df_v
 
 
 if __name__ == "__main__":
-    df = process_df(getDF())
+    df = process_df(getDF().head(1000))
     res = calculate_similarity(df, verbose=True)
-    res.to_csv("compare_result.csv")
+    res.to_csv("res_dummy.csv")
     print(res)
     print("Import this file to perform doc2vec")
