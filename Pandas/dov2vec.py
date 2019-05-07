@@ -9,10 +9,11 @@ from misc.doc2vec import EpochLogger
 from gensim.matutils import cossim, dense2vec
 import pandas as pd
 
-m = Doc2Vec.load("../misc/models/doc2vec_2019.model")
+
+# m = Doc2Vec.load("../misc/models/doc2vec_2019.model")
 
 
-def calculate_single_document_vector(document=None, model=m):
+def calculate_single_document_vector(document, model):
     """
     Calculate vector from a single document
     Parameters
@@ -29,21 +30,21 @@ def calculate_single_document_vector(document=None, model=m):
     if document is None:
         return []
 
-    return m.infer_vector(document.split())
+    return model.infer_vector(document.split())
 
 
-def calculate_document_vectors(df, col='cleaned_text', new='d2v_vector', model=m):
+def calculate_document_vectors(df, model, col='cleaned_text', new='d2v_vector'):
     """
     Take a pandas dataframe and for each document, calculate vector
     Parameters
     ----------
     df: DataFrame
+    model: Doc2Vec
+        A pre-trained Doc2Vec model
     col: str
         Column where old text is saved
     new: str
         New column to add
-    model: Doc2Vec
-        A pre-trained Doc2Vec model
 
     Returns
     -------
@@ -56,7 +57,7 @@ def calculate_document_vectors(df, col='cleaned_text', new='d2v_vector', model=m
     return df
 
 
-def calculate_similarity(df, similarity_threshold=0.6, model=m, verbose=False):
+def calculate_similarity(df, model, similarity_threshold=0.6, verbose=False):
     """
     Take a pandas dataframe and add a new column with similarity scores
 
