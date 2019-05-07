@@ -8,10 +8,10 @@ from misc import text_processing
 from misc.doc2vec import EpochLogger
 import pandas as pd
 
-m = Doc2Vec.load("../misc/models/doc2vec_1_day.model")
+m = Doc2Vec.load("../misc/models/doc2vec_1_day_2.model")
 
 
-def calculate_similarity(df, model=m, verbose=False):
+def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
     """
     Take a pandas dataframe and add a new column with similarity scores
 
@@ -29,22 +29,29 @@ def calculate_similarity(df, model=m, verbose=False):
     DataFrame
     """
     similarity_values = []
+    # We can search the full index but limiting to 33% could be faster as we will definitely have more than 3 topics
+    similar_docs_limit = len(df)
+    current_articles = set(df['url'])
 
-    # TODO: Optimize this by not comparing with already compared rows
     for article in df.itertuples():
         if verbose:
             print("Processing ", article.url, " [", article.Index, "/", len(df), "] - ",
                   datetime.strftime(datetime.now(), "%H:%M:%S"), sep="")
         current_scores = dict()
         if article.cleaned_text is None:
+            similarity_values.append(current_scores)
             continue
-        for compared in df.itertuples():
-            if compared.cleaned_text is None:
-                continue
-            current_scores[compared.url] = model.docvecs.similarity_unseen_docs(
-                model, article.cleaned_text.split(), compared.cleaned_text.split())
-        similarity_values.append(current_scores)
-    similarity_values = df.Series().append(similarity_values)
+        # get top 20 most similar articles
+        # similar_docs = model.docvecs.
+        inferred_vector = model.infer_vector(article.cleaned_text.split())
+        similarity = model.docvecs.most_similar([inferred_vector], topn=similar_docs_limit)
+        # convert tuples to dictionary for easy
+        similarity_dict = {doc[0]: doc[1]
+                           for doc in similarity
+                           if doc[0] in current_articles and doc[1] > similarity_threshold and doc[0] != article.url}
+        similarity_values.append(similarity_dict)
+
+    similarity_values = pd.Series(similarity_values)
 
     df['doc2vec_scores'] = similarity_values
     return df
