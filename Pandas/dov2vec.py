@@ -29,11 +29,23 @@ def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
     DataFrame
     """
     similarity_values = []
-    similarity_numbers = []
+    inferred_vectors = []
     # We can search the full index but limiting to 33% could be faster as we will definitely have more than 3 topics
     similar_docs_limit = len(df)
     current_articles = set(df['url'])
 
+    for article in df.itertuples():
+        if verbose:
+            print("Computing vector for ", article.url, " [", article.Index, "/", len(df), "] - ",
+                  datetime.strftime(datetime.now(), "%H:%M:%S"), sep="")
+
+        if article.cleaned_text is None:
+            inferred_vectors.append([])
+
+        inferred_vector = model.infer_vector(article.cleaned_text.split())
+        inferred_vectors.append(inferred_vector)
+
+    i = 0
     for article in df.itertuples():
         if verbose:
             print("Processing ", article.url, " [", article.Index, "/", len(df), "] - ",
@@ -41,23 +53,22 @@ def calculate_similarity(df, similarity_threshold=0.8, model=m, verbose=False):
         current_scores = dict()
         if article.cleaned_text is None:
             similarity_values.append(current_scores)
+            i += 1
             continue
         # get top 20 most similar articles
-        # similar_docs = model.docvecs.
-        inferred_vector = model.infer_vector(article.cleaned_text.split())
+        inferred_vector = inferred_vectors[i]
         similarity = model.docvecs.most_similar([inferred_vector], topn=similar_docs_limit)
         # convert tuples to dictionary for easy
         similarity_dict = {doc[0]: doc[1]
                            for doc in similarity
                            if doc[0] in current_articles and doc[1] > similarity_threshold and doc[0] != article.url}
         similarity_values.append(similarity_dict)
-        similarity_numbers.append(len(similarity_dict))
+        i += 1
 
     similarity_values = pd.Series(similarity_values)
-    similarity_numbers = pd.Series(similarity_numbers)
 
     df['doc2vec_scores'] = similarity_values
-    df['doc2vec_duplicates'] = similarity_numbers
+    df['doc2vec_duplicates'] = df.apply(lambda row: len(row.doc2vec_scores), axis=1)
     return df
 
 
