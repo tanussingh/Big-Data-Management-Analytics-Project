@@ -19,7 +19,7 @@ def getDF():
 
     articles = []
     if (collection_Article.count()) > 0:
-        filter = {"date_publish": {"$gt": datetime(2019, 5, 5)}}
+        filter = {"date_publish": {"$gt": datetime(2019, 4, 29)}}
         for story in collection_Article.find(filter):
             articles.append(story)
 
