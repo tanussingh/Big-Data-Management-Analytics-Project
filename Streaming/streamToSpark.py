@@ -2,7 +2,7 @@
 from udpipe_parse import udpipe_parse, udpipe_pos
 import os
 import json
-os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2 pyspark-shell \
+os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.2,org.mongodb.spark:mongo-spark-connector_2.11:2.4.0 pyspark-shell \
     --py-files udpipe_parse.py streamToSpark.py \
     --conf "spark.mongodb.input.uri=mongodb://127.0.0.1/big_data.udpipe_parse" \
     --conf "spark.mongodb.output.uri=mongodb://127.0.0.1/big_data.udpipe_parse"'
@@ -17,7 +17,6 @@ import pymongo
 spark = SparkSession \
          .builder \
          .appName('PythonStreamingRecieverKafkaWordCount') \
-         .config('spark.jars.packages', 'org.mongodb.spark:mongo-spark-connector_2.11:2.4.0')\
          .getOrCreate()
 
 sc = spark.sparkContext
