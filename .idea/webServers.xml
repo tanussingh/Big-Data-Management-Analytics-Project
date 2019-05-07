@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1d8f7e81-85d4-4528-8e7f-14c522527dbf" name="Hadoop Vagrant" url="http://localhost">
+        <fileTransfer port="0" mountedRoot="$USER_HOME$/Documents/Study/Spring 2019/CS 6350 - Big Data/Hadoop/data/project" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>

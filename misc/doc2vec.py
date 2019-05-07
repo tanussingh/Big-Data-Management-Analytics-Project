@@ -12,6 +12,7 @@ from tqdm import tqdm
 # from gensim.test.utils import get_tmpfile
 from gensim.models.callbacks import CallbackAny2Vec
 import time
+from misc.text_processing import process_text
 
 
 class EpochLogger(CallbackAny2Vec):
@@ -19,10 +20,10 @@ class EpochLogger(CallbackAny2Vec):
         self.epoch = 0
 
     def on_epoch_begin(self, model):
-        print("Epoch", self.epoch, " started at", datetime.datetime.fromtimestamp(time.time()).strftime("%H:%M:%S"))
+        print("Epoch", self.epoch, "started at: ", datetime.datetime.fromtimestamp(time.time()).strftime("%H:%M:%S"))
 
     def on_epoch_end(self, model):
-        print("Epoch", self.epoch, "finished at", datetime.datetime.fromtimestamp(time.time()).strftime("%H:%M:%S"))
+        print("Epoch", self.epoch, "finished at:", datetime.datetime.fromtimestamp(time.time()).strftime("%H:%M:%S"))
         self.epoch += 1
 
 
@@ -58,14 +59,13 @@ if __name__ == "__main__":
     # a list for the training data
     train = []
     count = 0
-    query = {"date_publish": {"$gt": datetime.datetime(2019, 1, 1)}}
+    query = {"date_publish": {"$gt": datetime.datetime(2019, 5, 6)}}
     for i, story in tqdm(enumerate(collection_Article.find(query))):
         t = story['text']
         # some docs may have no text
         if t is None:
             continue
-        ti = gensim.utils.simple_preprocess(t)
-        ti = [word for word in ti if word not in stop_words]
+        ti = process_text(t).split()
         train.append(gensim.models.doc2vec.TaggedDocument(
             ti, [story['url']]))
         count += 1
@@ -106,22 +106,22 @@ if __name__ == "__main__":
     print("Done with model")
     # now we create an inferred vector and compute ranks for each of the documents
     # as it is from github
-    ranks = []
-    second_ranks = []
-    for doc_id in range(len(train)):
-        inferred_vector = model.infer_vector(train[doc_id].words)
-        sims = model.docvecs.most_similar(
-            [inferred_vector], topn=len(model.docvecs))
-        rank = [docid for docid, sim in sims].index(doc_id)
-        ranks.append(rank)
-
-        second_ranks.append(sims[1])
-
-    print('Document ({}): «{}»\n'.format(doc_id, ' '.join(train[doc_id].words)))
-    print(u'SIMILAR/DISSIMILAR DOCS PER MODEL %s:\n' % model)
-    for label, index in [('MOST', 0), ('SECOND-MOST', 1), ('MEDIAN', len(sims) // 2), ('LEAST', len(sims) - 1)]:
-        print(u'%s %s: «%s»\n' %
-              (label, sims[index], ' '.join(train[sims[index][0]].words)))
+    # ranks = []
+    # second_ranks = []
+    # for doc_id in range(len(train)):
+    #     inferred_vector = model.infer_vector(train[doc_id].words)
+    #     sims = model.docvecs.most_similar(
+    #         [inferred_vector], topn=len(model.docvecs))
+    #     rank = [docid for docid, sim in sims].index(doc_id)
+    #     ranks.append(rank)
+    #
+    #     second_ranks.append(sims[1])
+    #
+    # print('Document ({}): «{}»\n'.format(doc_id, ' '.join(train[doc_id].words)))
+    # print(u'SIMILAR/DISSIMILAR DOCS PER MODEL %s:\n' % model)
+    # for label, index in [('MOST', 0), ('SECOND-MOST', 1), ('MEDIAN', len(sims) // 2), ('LEAST', len(sims) - 1)]:
+    #     print(u'%s %s: «%s»\n' %
+    #           (label, sims[index], ' '.join(train[sims[index][0]].words)))
 
     sud = model.docvecs.similarity_unseen_docs(
         model, s1, s2, alpha=None, min_alpha=None, steps=None)
@@ -129,5 +129,5 @@ if __name__ == "__main__":
     print("sud ")
     print(sud)
 
-    fname = ("./doc2vec_2019")
+    fname = ("./models/doc2vec_1_day.model")
     model.save(fname)
