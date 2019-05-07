@@ -78,9 +78,6 @@ def jacc_sim(set1, set2):
 
     return set_intersection_size / set_union_size
 
-
-
-
 if __name__ == '__main__':
     # In Python2, wrap sys.stdin and sys.stdout to work with unicode.
     if sys.version_info[0] < 3:
@@ -104,6 +101,7 @@ if __name__ == '__main__':
     pipeline = Pipeline(model, sys.argv[1], Pipeline.DEFAULT, Pipeline.DEFAULT, sys.argv[2])
     error = ProcessingError()
 
+
     # Read whole input
     text = "Desde que los fiscales estadounidenses anunciaron en marzo los cargos contra 50 personas en una amplia investigación de fraude en el sistema de admisión a las universidades, se toparon con un caso misterioso: una familia dice que le pagó a un consultor universitario 6,5 millones de dólares, mucho más que cualquiera de los padres mencionados en la investigación, para que su hija ingresara a la universidad.\n[Si quieres recibir los mejores reportajes de The New York Times en Español en tu correo suscríbete aquí a El Times]\nLa estudiante es Yusi Zhao, quien fue admitida en Stanford en 2017, según una persona que conoce la investigación. Ni ella ni sus padres, que viven en Pekín, han sido acusados, y no está claro si actualmente se les investiga. Stanford rescindió la admisión de Zhao en abril y ya no estudia allí.\nLa persona que conoce la investigación dijo que la familia de Zhao fue presentada al asesor en universidades, William Singer, por un asesor financiero de Morgan Stanley con sede en Pasadena, llamado Michael Wu. Una portavoz de Morgan Stanley dijo que Wu había sido despedido por no cooperar con una investigación interna sobre el asunto y que la firma estaba cooperando con las autoridades. Wu no respondió a una llamada telefónica.\nEn una audiencia judicial en marzo, el fiscal principal en el caso de las admisiones, Eric S. Rosen, dijo que Singer había intentado que Zhao, a quien Rosen no identificó por su nombre, fuera reclutada por Stanford y creó un perfil falso de sus supuestos logros deportivos en vela.\nAl final no fue reclutada pero Rosen dijo que, en parte, fue admitida en Stanford debido a esas credenciales falsas y que, luego de entrar a la universidad, Singer hizo una donación de 500.000 al programa de vela de Stanford.\nSinger se declaró culpable de extorsión y otros cargos, por idear un plan que los fiscales dicen que incluye trampas en los exámenes de ingreso a la universidad y sobornar a entrenadores para reclutar a estudiantes que realmente no eran atletas competitivos.\nEl exentrenador de vela de Stanford, John Vandemoer, se declaró culpable de conspiración para cometer extorsión. Según el testimonio de Rosen en su audiencia de declaración de culpabilidad, Vandemoer no ayudó a la aplicación de Zhao “de ninguna manera material”, sino que aceptó otras donaciones de Singer a su programa con la finalidad de reservar puestos de reclutamiento para los clientes de Singer. El abogado de Vandemoer, Robert Fisher, declinó hacer comentarios.\nZhao, cuya identidad fue dada a conocer por primera vez por Los Angeles Times, parece haber participado en una conferencia reciente organizada por Princeton-U.S. China Coalition. En su biografía en el sitio web del grupo dice que quiere especializarse en psicología y estudios del este de Asia y que está interesada en las políticas educativas de China. Agregó que esperaba involucrarse en el gobierno chino en el futuro.\nZhao trabajó durante un verano reciente en un laboratorio de investigación de biología y química en Harvard, bajo la dirección de Daniel G. Nocera, profesor de energía en la universidad. Nocera dijo en un correo electrónico que a Zhao no se le pagaba y que trabajaba para recibir crédito académico en Stanford.\nEl miércoles en el campus de Stanford, algunos estudiantes no parecieron perturbarse por la noticia de que una persona había pagado millones para estudiar allí. Tamara Morris, una joven de 20 años que estudia ciencia política y estudios afroamericanos, dijo que desconocía el caso Zhao.\nLa conversación sobre el escándalo de admisión a la universidad se había calmado en las últimas semanas en el campus, dijo Morris, y agregó que la noticia no la molestó particularmente. “Yo sé cómo entré”, dijo."
     text = re.sub(r'\n+', '\n\n', text)
@@ -123,4 +121,3 @@ if __name__ == '__main__':
 
     propn_sim = jacc_sim(parse_pos['PROPN'], parse_pos2['PROPN'])
     print(propn_sim)
-
