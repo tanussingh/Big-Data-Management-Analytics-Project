@@ -61,3 +61,5 @@ Install the ufal.udpipe library by running: `pip install ufal.udpipe`. You can r
  ## Data Source
  
  All data can be fetched from * [onedrive link](https://cometmail-my.sharepoint.com/:f:/g/personal/tts150030_utdallas_edu/EqbuJJV8y11CuaVfiVlgAT0BPam1X3duE1lzda9szU2RBw?e=P1ZMld)
+ 
+ All models can be fetched from [here](https://cometmail-my.sharepoint.com/:u:/g/personal/ixs171130_utdallas_edu/Eej4D2TvDzVMt-H7Rdbx8M0BGbjRVSkjPsIcdrqaI5eVRg?e=1KGix3)
