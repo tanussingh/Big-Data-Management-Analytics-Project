@@ -31,7 +31,8 @@ if collection_ud.count() > 0:
 print(df_d2v.head(20))
 df_full = df_ud
 print(df_full)
-df_out = pandas.DataFrame(columns = ['url', 'SimilarityList'])
+df_out = pandas.DataFrame(columns = ['url', 'SimilarityList', 'TotalNumDups'])
+df_DeDup = pandas.DataFrame(columns = ['url', 'SimilarUrls', 'TotalNum'])
 
 for index, row in df_d2v.iterrows():
     url1 = row['url']
@@ -39,6 +40,7 @@ for index, row in df_d2v.iterrows():
     parse_pos = df_full[df_full['url'] == url1].iloc[0]['udpipe']
     parse_pos = json.loads(parse_pos)
     simList = {}
+    simUrls = []
     for url2 in json.loads(row['d2v_sim']):
         text2 = df_full[df_full['url'] == url2].iloc[0]['text']
         parse_pos2 = df_full[df_full['url'] == url2].iloc[0]['udpipe']
@@ -46,10 +48,19 @@ for index, row in df_d2v.iterrows():
         s1 = set(parse_pos['AUX']) | set(parse_pos['NUM']) | set(parse_pos['VERB']) | set(parse_pos['NOUN']) | set(parse_pos['PROPN'])
         s2 = set(parse_pos2['AUX']) | set(parse_pos2['NUM']) | set(parse_pos2['VERB']) | set(parse_pos2['NOUN']) | set(parse_pos2['PROPN'])
         valuejacc = jacc_sim(s1, s2)
+        if (valuejacc > .1):
+            simUrls.append(url2)
+            print("FOUND SIMILAR MATCH FOR ", url1, " WITH SIMILARITY RATE OF ", valuejacc)
         simList[url2] = valuejacc
     row = {'url': url1, 'SimilarityList': json.dumps(simList), 'TotalNumDups': len(simList)}
     df_out = df_out.append(row, ignore_index=True)
-    print("------------------- " ,url1)
+    if (len(simUrls) != 0) :
+        row2 = {'url': url1, 'SimilarUrls': json.dumps(simUrls), 'TotalNum': len(simUrls)}
+        df_DeDup = df_DeDup.append(row2,ignore_index=True)
+    print("------------------- " ,url1, " DONE ------------------------")
 
 dbCol = dbArticles['jacc_sim_calculated']
 dbCol.insert_many(df_out.to_dict(orient='records'))
+
+dbDeDup = dbArticles['dedup_calculated']
+dbDeDup.insert_many(df_DeDup.to_dict(orient='records'))
