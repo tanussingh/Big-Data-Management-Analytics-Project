@@ -26,27 +26,18 @@ You can find a full list of models [here](https://lindat.mff.cuni.cz/repository/
 
 Install the ufal.udpipe library by running: `pip install ufal.udpipe`. You can read more about this library [here](https://pypi.org/project/ufal.udpipe/).
 
-Here is the format for running the example program (from the official page):
+### Other Required Libraries
 
-```
-python run_udpipe.py input_format(tokenize|conllu|horizontal|vertical) output_format(conllu) model_file
-```
-
-Here is an example usage:
-```
-python run_udpipe.py tokenize conllu spanish-ancora-ud-2.3-181115.udpipe
-```
-
-Type (or paste) some text into the terminal after the message `Loading model: done`. (You can input multiple lines.)
-Then press <kbd>⌘</kbd> + <kbd>D</kbd> to finish reading. The program will then output the UD parse.
-
+* Spark
+* Kafka
+* MongoDB
 
 ## Running
 
 1. Crawl all your data and ensure it is brought saved as a JSON in MongoDB
+3. Start the zookeeper and Kafka server, then run streamToSpark.py to stream data into Spark and to start listening to the Kafka topic
 2. Run readInFromMongo.py to stream data into Kafka
-3. Run streamToSpark.py to stream data into Spark
-4. Run doc2vec.py and mongo_processing.py to get similariy measures on articles
+4. Run doc2vec.py and mongo_processing.py to get similarity measures on articles
 5. Run runningJaccSim.py to compute and run the DeDuplication algorithm 
 
 
