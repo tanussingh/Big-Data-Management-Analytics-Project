@@ -57,3 +57,7 @@ Install the ufal.udpipe library by running: `pip install ufal.udpipe`. You can r
  ## Data Analysis
  
  iPython notebook for graphing and seeing some statistics is included in `Analysis/data_analysis.ipnyb`. 
+ 
+ ## Data Source
+ 
+ All data can be fetched from * [onedrive link](https://cometmail-my.sharepoint.com/:f:/g/personal/tts150030_utdallas_edu/EqbuJJV8y11CuaVfiVlgAT0BPam1X3duE1lzda9szU2RBw?e=P1ZMld)
