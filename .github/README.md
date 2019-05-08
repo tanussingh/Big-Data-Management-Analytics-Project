@@ -23,4 +23,6 @@ Project for CS 6350 (Spring19) at The University of Texas at Dallas.
 3. Run streamToSpark.py to stream data into Spark
 4. Run doc2vec.py and mongo_processing.py to get similariy measures on articles
 5. Run runningJaccSim.py to compute and run the DeDuplication algorithm 
+
+
 All components are saved back to MongoDB and can be directly accessed from there.
