@@ -36,13 +36,21 @@ df_DeDup = pandas.DataFrame(columns = ['url', 'SimilarUrls', 'TotalNum'])
 
 for index, row in df_d2v.iterrows():
     url1 = row['url']
-    text1 = df_full[df_full['url'] == url1].iloc[0]['text']
+    #text1 = df_full[df_full['url'] == url1].iloc[0]['text']
+    match1= df_full[df_full['url'] == url1]
+    if len(match1) == 0 or 'text' not in match1.columns or match1.iloc[0]['text'] is None:
+        continue
+    text1 = match1.iloc[0]['text']
     parse_pos = df_full[df_full['url'] == url1].iloc[0]['udpipe']
     parse_pos = json.loads(parse_pos)
     simList = {}
     simUrls = []
     for url2 in json.loads(row['d2v_sim']):
-        text2 = df_full[df_full['url'] == url2].iloc[0]['text']
+        #text2 = df_full[df_full['url'] == url2].iloc[0]['text']
+        match2 = df_full[df_full['url'] == url2]
+        if len(match2) == 0 or 'text' not in match2.columns or match2.iloc[0]['text'] is None:
+            continue
+        text2 = match2.iloc[0]['text']
         parse_pos2 = df_full[df_full['url'] == url2].iloc[0]['udpipe']
         parse_pos2 = json.loads(parse_pos2)
         s1 = set(parse_pos['AUX']) | set(parse_pos['NUM']) | set(parse_pos['VERB']) | set(parse_pos['NOUN']) | set(parse_pos['PROPN'])
