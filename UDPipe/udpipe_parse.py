@@ -8,6 +8,8 @@ pipeline = Pipeline(model, 'tokenize', Pipeline.DEFAULT, Pipeline.DEFAULT, 'conl
 error = ProcessingError()
 
 def udpipe_parse(text):
+    if text is None:
+        return ""
     processed = pipeline.process(text, error)
     if error.occurred():
         sys.stderr.write("An error occurred when running run_udpipe: ")
@@ -81,5 +83,7 @@ def jacc_sim(set1, set2):
 
     set_intersection_size = len(set1 & set2)
     set_union_size = len(set1 | set2)
+    if(set_union_size == 0):
+        return 0
 
     return set_intersection_size / set_union_size

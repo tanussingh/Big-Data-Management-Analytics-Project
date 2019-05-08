@@ -2,12 +2,15 @@ import sys
 import json
 from ufal.udpipe import Model, Pipeline, ProcessingError  # pylint: disable=no-name-in-module
 
-model = Model.load(
-        '/Users/mavis/PycharmProjects/Big-Data-Management-Analytics/UDPipe/spanish-ancora-ud-2.3-181115.udpipe')
+model = Model.load('../UDPipe/spanish-ancora-ud-2.3-181115.udpipe')
 pipeline = Pipeline(model, 'tokenize', Pipeline.DEFAULT, Pipeline.DEFAULT, 'conllu')
 error = ProcessingError()
 
+
 def udpipe_parse(text):
+    if text is None:
+        return ""
+
     processed = pipeline.process(text, error)
     if error.occurred():
         sys.stderr.write("An error occurred when running run_udpipe: ")
